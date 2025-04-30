@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Enviar Reportes</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center p-8">
+
+  <div class="w-full max-w-5xl bg-white p-8 rounded-2xl shadow-lg">
+    <h1 class="text-3xl font-bold text-gray-800 mb-6">Enviar Reportes del Día</h1>
+
+    <!-- Botón Volver al Dashboard -->
+    <div class="mb-6 text-center">
+      <a href="/dashboard" class="inline-block bg-gradient-to-r from-green-500 to-green-700 text-white py-3 px-6 rounded-lg font-semibold hover:opacity-90 transition">
+        Volver al Dashboard
+      </a>
+    </div>
+
+    <!-- Botón Enviar Reportes -->
+    <form action="/dashboard/send_reports/send" method="POST" class="mb-6 flex justify-end">
+      <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow transition">
+        📤 Enviar Reportes
+      </button>
+    </form>
+
+    <!-- Tabla de Reportes -->
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-white border border-gray-300 rounded-lg">
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="py-3 px-6 text-left font-semibold text-gray-700">Título</th>
+            <th class="py-3 px-6 text-left font-semibold text-gray-700">Descripción</th>
+            <th class="py-3 px-6 text-left font-semibold text-gray-700">Fecha</th>
+            <th class="py-3 px-6 text-left font-semibold text-gray-700">Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (reports.length > 0) { %>
+            <% reports.forEach(report => { %>
+              <tr class="border-t">
+                <td class="py-3 px-6"><%= report.title %></td>
+                <td class="py-3 px-6">
+                  <%= report.description ? report.description.substring(0, 50) + '...' : 'Sin descripción' %>
+                </td>
+                <td class="py-3 px-6">
+                  <%= report.created_at.toISOString().slice(0, 10) %>
+                </td>
+                <td class="py-3 px-6">
+                  <% if (report.enviado) { %>
+                    <span class="text-green-600 font-bold">Enviado ✅</span>
+                  <% } else { %>
+                    <span class="text-red-600 font-bold">No enviado ❌</span>
+                  <% } %>
+                </td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="4" class="py-6 text-center text-gray-500">No hay reportes para hoy.</td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Mensajes con SweetAlert2 -->
+  <script>
+    <% if (sent == '1') { %>
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: 'Los reportes se han enviado correctamente.',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Aceptar'
+      });
+    <% } else if (error == 'nodest') { %>
+      Swal.fire({
+        icon: 'error',
+        title: 'No hay destinatarios',
+        text: 'Por favor, agrega correos antes de enviar reportes.',
+        confirmButtonColor: '#d33',
+        confirmButtonText: 'Agregar Correos'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = '/dashboard/emails'; // Puedes ajustar la ruta si es diferente
+        }
+      });
+    <% } else if (error) { %>
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Ocurrió un error inesperado al enviar los reportes.',
+        confirmButtonColor: '#d33',
+        confirmButtonText: 'Aceptar'
+      });
+    <% } %>
+  </script>
+
+</body>
+</html>

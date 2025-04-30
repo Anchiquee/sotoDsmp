@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestión de Usuarios</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Función para mostrar el formulario de actualización
+    function toggleUpdateForm(userId) {
+      const form = document.getElementById('update-user-' + userId);
+      form.classList.toggle('hidden');
+    }
+  </script>
+</head>
+<body class="bg-gray-100 text-gray-900 min-h-screen">
+
+  <div class="container mx-auto px-6 py-10">
+    <h2 class="text-4xl font-bold text-center text-blue-700 mb-10">Gestión de Usuarios</h2>
+
+    <div class="flex flex-col md:flex-row gap-8">
+      
+      <% if (user && user.role === 'admin') { %>
+      <!-- Crear usuario (solo admin) -->
+      <div class="md:w-1/2 bg-white p-8 shadow-xl rounded-2xl border-t-4 border-blue-600">
+        <h3 class="text-2xl font-semibold text-center text-blue-700 mb-6">Crear nuevo usuario</h3>
+
+        <% if (typeof message !== 'undefined' && message) { %> <!-- Verificación segura de message -->
+          <div class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+            <%= message %>
+          </div>
+        <% } %>
+
+        <form action="/dashboard/users/create" method="POST" class="space-y-4">
+          <input name="name" placeholder="Nombre" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none" />
+          <input name="email" type="email" placeholder="Email" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none" />
+          <input name="password" type="password" placeholder="Contraseña" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none" />
+          <select name="role" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none">
+            <option value="user">Usuario</option>
+            <option value="admin">Administrador</option>
+          </select>
+          <button class="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white py-3 rounded-lg hover:opacity-90 transition duration-200 font-semibold">Crear</button>
+        </form>
+      </div>
+      <% } %>
+
+      <!-- Lista de usuarios -->
+      <div class="<%= (user && user.role === 'admin') ? 'md:w-1/2' : 'w-full' %> bg-white p-8 shadow-xl rounded-2xl border-t-4 border-blue-600">
+        <h3 class="text-2xl font-semibold text-center text-blue-700 mb-6">Lista de usuarios</h3>
+        <div class="overflow-x-auto">
+          <table class="min-w-full table-auto border-collapse border border-gray-200">
+            <thead>
+              <tr class="bg-blue-100 text-blue-900">
+                <th class="p-3 text-left border-b">Nombre</th>
+                <th class="p-3 text-left border-b">Email</th>
+                <th class="p-3 text-left border-b">Rol</th>
+                <% if (user && user.role === 'admin') { %>
+                  <th class="p-3 text-left border-b">Acciones</th>
+                <% } %>
+              </tr>
+            </thead>
+            <tbody>
+              <% users.forEach(u => { %>
+                <tr class="hover:bg-blue-50">
+                  <td class="p-3 border-b"><%= u.name %></td>
+                  <td class="p-3 border-b"><%= u.email %></td>
+                  <td class="p-3 border-b capitalize"><%= u.role %></td>
+                  <% if (user && user.role === 'admin') { %>
+                    <td class="p-3 border-b space-x-2">
+                      <!-- Botón de actualización -->
+                      <button onclick="toggleUpdateForm(<%= u.id %>)" class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition">Actualizar</button>
+
+                      <!-- Botón de eliminar -->
+                      <a href="/dashboard/users/delete/<%= u.id %>" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition">Eliminar</a>
+                    </td>
+                  <% } %>
+                </tr>
+
+                <!-- Formulario de actualización del usuario (oculto inicialmente) -->
+                <% if (user && user.role === 'admin') { %>
+                  <tr id="update-user-<%= u.id %>" class="hidden">
+                    <td colspan="4">
+                      <form action="/dashboard/users/update/<%= u.id %>" method="POST" class="space-y-4 p-6 bg-blue-50 rounded-lg shadow-md">
+                        <input name="name" value="<%= u.name %>" placeholder="Nombre" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none" />
+                        <input name="email" value="<%= u.email %>" placeholder="Email" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none" />
+                        <input name="password" type="password" placeholder="Contraseña" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none" />
+                        <select name="role" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none">
+                          <option value="user" <%= u.role === 'user' ? 'selected' : '' %>>Usuario</option>
+                          <option value="admin" <%= u.role === 'admin' ? 'selected' : '' %>>Administrador</option>
+                        </select>
+                        <button type="submit" class="w-full bg-gradient-to-r from-yellow-500 to-yellow-700 text-white py-3 rounded-lg hover:opacity-90 transition duration-200 font-semibold">Actualizar</button>
+                      </form>
+                    </td>
+                  </tr>
+                <% } %>
+
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-10">
+      <a href="/dashboard" class="inline-block bg-gradient-to-r from-green-500 to-green-700 text-white py-3 px-6 rounded-lg font-semibold hover:opacity-90 transition">Volver al Dashboard</a>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Crear Reportes</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+
+  <nav class="bg-blue-600 text-white p-4">
+    <div class="container mx-auto flex justify-between items-center">
+      <a href="/dashboard" class="text-xl font-bold">Dashboard</a>
+    </div>
+  </nav>
+  <h2 class="text-3xl font-bold text-center mb-6">Crear Reporte</h2>
+  <div class="container mx-auto p-6">
+    
+
+    <form action="/dashboard/reports/create" method="POST" class="space-y-6">
+      <div>
+        <label for="title" class="block text-lg font-semibold">Título:</label>
+        <input type="text" id="title" name="title" class="w-full p-3 border border-gray-300 rounded-lg" required>
+      </div>
+
+      <div>
+        <label for="description" class="block text-lg font-semibold">Descripción:</label>
+        <textarea id="description" name="description" class="w-full p-3 border border-gray-300 rounded-lg" required></textarea>
+      </div>
+
+      <div>
+        <label for="db_host" class="block text-lg font-semibold">Host de la Base de Datos:</label>
+        <input type="text" id="db_host" name="db_host" class="w-full p-3 border border-gray-300 rounded-lg" required>
+      </div>
+
+      <div>
+        <label for="db_port" class="block text-lg font-semibold">Puerto de la Base de Datos:</label>
+        <input type="text" id="db_port" name="db_port" class="w-full p-3 border border-gray-300 rounded-lg" required>
+      </div>
+
+      <div>
+        <label for="db_user" class="block text-lg font-semibold">Usuario de la Base de Datos:</label>
+        <input type="text" id="db_user" name="db_user" class="w-full p-3 border border-gray-300 rounded-lg" required>
+      </div>
+
+      <div>
+        <label for="db_password" class="block text-lg font-semibold">Contraseña de la Base de Datos:</label>
+        <input type="password" id="db_password" name="db_password" class="w-full p-3 border border-gray-300 rounded-lg" >
+      </div>
+
+      <div>
+        <label for="db_name" class="block text-lg font-semibold">Nombre de la Base de Datos:</label>
+        <input type="text" id="db_name" name="db_name" class="w-full p-3 border border-gray-300 rounded-lg" required>
+      </div>
+
+      <div>
+        <label for="db_query" class="block text-lg font-semibold">Consulta SQL:</label>
+        <textarea id="db_query" name="db_query" class="w-full p-3 border border-gray-300 rounded-lg" required></textarea>
+      </div>
+
+      <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200">Crear Reporte</button>
+    </form>
+
+    <a href="/dashboard/reports" class="mt-6 inline-block text-white bg-green-600 hover:bg-green-700 py-3 px-6 rounded-lg transition duration-200">Volver a Reportes</a>
+  </div>
+
+  <footer class="bg-blue-600 text-white text-center py-4 mt-6">
+    <p>&copy; 2025 Mi App</p>
+  </footer>
+
+</body>
+</html>

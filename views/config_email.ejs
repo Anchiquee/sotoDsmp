@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  
+  <title>Configuración de Correo</title>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 min-h-screen flex items-center justify-center">
+
+  <div class="w-full max-w-4xl p-8 bg-white shadow-2xl rounded-2xl">
+
+    <!-- Barra superior -->
+    <div class="flex justify-between items-center mb-8">
+      <h1 class="text-3xl font-bold text-gray-800">Configuración de Correo</h1>
+      <a href="/dashboard" class="inline-block bg-gradient-to-r from-green-500 to-green-700 text-white py-3 px-6 rounded-lg font-semibold hover:opacity-90 transition">
+        Volver al Dashboard
+      </a>
+    </div>
+
+    <!-- Muestra el mensaje de éxito si existe -->
+    <% if (message) { %>
+      <script>
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: '<%= message %>',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Aceptar'
+        });
+      </script>
+    <% } %>
+
+    <!-- Formulario principal -->
+    <form action="/dashboard/config_email" method="POST" class="grid grid-cols-1 gap-6">
+
+      <div>
+        <label for="smtpServer" class="block text-lg font-semibold text-gray-700 mb-1">Servidor SMTP</label>
+        <input 
+          type="text" 
+          id="smtpServer" 
+          name="smtpServer" 
+          value="<%= config.smtpServer %>" 
+          class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-400" 
+          required
+        >
+      </div>
+
+      <div>
+        <label for="smtpPort" class="block text-lg font-semibold text-gray-700 mb-1">Puerto SMTP</label>
+        <input 
+          type="number" 
+          id="smtpPort" 
+          name="smtpPort" 
+          value="<%= config.smtpPort %>" 
+          class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-400" 
+          required
+        >
+      </div>
+
+      <div>
+        <label for="emailAddress" class="block text-lg font-semibold text-gray-700 mb-1">Correo Electrónico</label>
+        <input 
+          type="email" 
+          id="emailAddress" 
+          name="emailAddress" 
+          value="<%= config.emailAddress %>" 
+          class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-400" 
+          required
+        >
+      </div>
+
+      <div>
+        <label for="emailPassword" class="block text-lg font-semibold text-gray-700 mb-1">Contraseña</label>
+        <div class="relative">
+          <input 
+            type="password" 
+            id="emailPassword" 
+            name="emailPassword" 
+            value="<%= config.emailPassword %>" 
+            class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-400 pr-12" 
+            required
+          >
+          <button type="button" onclick="togglePassword()" id="togglePasswordBtn" class="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700 text-2xl">
+            👀
+          </button>
+        </div>
+      </div>
+
+      <!-- Botón de guardar -->
+      <div class="flex justify-end">
+        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow transition text-sm sm:text-base">
+          Guardar Configuración
+        </button>
+      </div>
+    </form>
+
+    <!-- Formulario separado para eliminar -->
+    <% if (config && config.smtpServer) { %>
+      <form id="deleteForm" action="/dashboard/config_email/delete" method="POST" class="flex justify-end mt-6">
+        <button 
+          type="button" 
+          onclick="confirmDelete()" 
+          class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg shadow transition text-sm sm:text-base"
+        >
+          Eliminar Configuración
+        </button>
+      </form>
+    <% } %>
+
+  </div>
+
+  <!-- Script para mostrar/ocultar contraseña -->
+  <script>
+    function togglePassword() {
+      const passwordInput = document.getElementById('emailPassword');
+      const toggleBtn = document.getElementById('togglePasswordBtn');
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleBtn.textContent = '⚠️';
+      } else {
+        passwordInput.type = 'password';
+        toggleBtn.textContent = '👀';
+      }
+    }
+  </script>
+
+  <!-- Script de confirmación de eliminación -->
+  <script>
+    function confirmDelete() {
+      Swal.fire({
+        title: '¿Estás seguro?',
+        text: "Esta acción eliminará la configuración de correo.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          document.getElementById('deleteForm').submit();
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>

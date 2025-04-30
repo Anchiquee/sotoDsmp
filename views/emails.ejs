@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gestión de Correos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="w-screen h-screen bg-gray-100 text-gray-900">
+
+  <div class="w-full h-full flex items-center justify-center p-6">
+    <div class="w-full h-full max-w-7xl bg-white rounded-2xl shadow-xl p-8 flex flex-col">
+
+      <!-- Título -->
+      <h2 class="text-3xl font-bold text-blue-700 mb-6 text-center">Gestión de Correos</h2>
+
+      <!-- Formulario solo para admin -->
+      <% if (user.role === 'admin') { %>
+        <div class="mb-6">
+          <form action="/dashboard/emails/create" method="POST" class="flex flex-col sm:flex-row gap-4">
+            <input 
+              type="email" 
+              name="address" 
+              placeholder="Correo electrónico" 
+              required
+              class="flex-grow px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+            />
+            <button 
+              type="submit" 
+              class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-200">
+              Agregar
+            </button>
+          </form>
+        </div>
+      <% } %>
+
+      <!-- Contenedor de correos con scroll -->
+      <div class="flex-grow overflow-y-auto">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <% emails.forEach(e => { %>
+            <div class="bg-gray-50 border border-gray-200 p-4 rounded-xl shadow-sm">
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-base font-medium text-gray-800 truncate"><%= e.address %></span>
+                <% if (user.role === 'admin') { %>
+                  <a 
+                    href="/dashboard/emails/delete/<%= e.id %>" 
+                    class="bg-red-600 text-white text-sm px-4 py-1.5 rounded-lg hover:bg-red-700 transition transform hover:scale-105">
+                    Eliminar
+                  </a>
+                <% } %>
+              </div>
+              <div class="text-xs text-gray-600">
+                <p>📅 Creado el: 
+                  <% if (e.created_at) { %>
+                    <%= new Date(e.created_at).toISOString().slice(0, 10) %>
+                  <% } else { %>
+                    Sin fecha
+                  <% } %>
+                </p>
+                <p>👤 Por: <%= e.created_by_name || 'Desconocido' %></p>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+
+      <!-- Botón de volver -->
+      <div class="mt-6 text-center">
+        <a href="/dashboard" class="inline-block bg-gradient-to-r from-green-500 to-green-700 text-white py-3 px-6 rounded-lg font-semibold hover:opacity-90 transition">
+          Volver al Dashboard
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

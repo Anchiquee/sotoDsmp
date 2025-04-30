@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acceso no autorizado</title>
+  <!-- Agregar Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Si deseas personalizar algunos estilos adicionales puedes agregarlo aquí */
+  </style>
+</head>
+<body class="bg-gray-100 font-sans">
+
+  <div class="flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg">
+      <!-- Imagen de error -->
+      <div class="mb-6">
+        <img src="https://img.freepik.com/free-vector/401-error-unauthorized-concept-illustration_114360-1934.jpg" alt="Error 401" class="w-full h-auto rounded-lg shadow-md">
+      </div>
+      <div class="bg-red-100 text-red-800 p-4 rounded-lg mb-6">
+        <h2 class="text-2xl font-semibold">Acceso no autorizado</h2>
+        <p class="mt-2"><%= message %></p>
+      </div>
+      <a href="/dashboard" class="block text-center py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300">Volver al Dashboard</a>
+    </div>
+  </div>
+
+</body>
+</html>
